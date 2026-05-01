@@ -8,7 +8,7 @@ dotenv.config();
 
 const cookieOptions = {
     httpOnly: true,
-    secure: true,
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
     maxAge: 24 * 60 * 60 * 1000
 }
@@ -50,11 +50,11 @@ export const authController = {
             });
 
             // sign jwt 
-            const token = jwt.sign({ userId: user.id }, secret_key, { expiresIn: '24hr' });
+            const token = jwt.sign({ userId: user.id, email: user.email }, secret_key, { expiresIn: '24hr' });
             // send cookie with token to the client
             res.cookie('token', token, {
                 httpOnly: true,    
-                secure: true,      
+                secure: process.env.NODE_ENV === 'production',      
                 sameSite: 'strict', 
                 maxAge: 24 * 60 * 60 * 1000 
             });
@@ -98,11 +98,11 @@ export const authController = {
             }
 
             // sign jwt, send response with user details and signed token
-            const token = jwt.sign({ userId: user.id }, secret_key, { expiresIn: '24hr' });
+            const token = jwt.sign({ userId: user.id, email: user.email }, secret_key, { expiresIn: '24hr' });
 
             res.cookie('token', token, {
                 httpOnly: true,    
-                secure: true,      
+                secure: process.env.NODE_ENV === 'production',      
                 sameSite: 'strict', 
                 maxAge: 24 * 60 * 60 * 1000 
             });

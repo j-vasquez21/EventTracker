@@ -2,33 +2,25 @@ import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { prisma } from '../lib/prisma.js';
 import dotenv from 'dotenv';
+import { JwtPayload } from '../types/auth.js';
 
 dotenv.config();
 
 const secret_key = process.env.JWT_SECRET as string;
 
-// extend payload to include userId
-interface JwtPayload {
-    userId?: string;
-}
+// created the express.d.ts file with request interface that includes user: JwtPayload property 
+//created the JwtPayload type 
 
-interface AuthRequest extends Request {
-    user?: {
-        id: string,
-        email: string
-    }
-}
-
-
-export const authMiddleware = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
     try {
         // get the token
         const token = req.cookies.token;
         // if does not have token, unauthenticated
         if (!token) {
-            return res.send(401).json({msg: 'Unauthorized token'});
+            return res.status(401).json({msg: 'Unauthorized: No token provided'});
         }
-        // verify the token
+
+        // verify and decode token payload
         const decoded = jwt.verify(token, secret_key) as JwtPayload;
 
         // the token has the user id that this token belongs to
@@ -40,14 +32,15 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
         });
 
         if (!user) {
-            return res.send(401).json({msg: 'Unauthorized token'});
+            return res.status(401).json({msg: 'Unauthorized token'});
         }
         
-        req.user = {id: user.id, email: user.email };
+        req.user = {userId: user.id, email: user.email };
         next();
     }
     catch (err) {
-        res.send(401).json({msg: 'Invalid or expired token'});
+        console.error("JWT Verification Error:", err);
+        res.status(401).json({msg: 'Invalid or expired token'});
     }
 }
 
