@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+
+    "rootDirs": ["./src", "./"],
+    "outDir": "./dist",
+
+    /* Core */
+    "target": "es2022",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    
+
+    /* Strictness */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+
+    /* Interop */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* DX + Safety */
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+
+    /* Output */
+    "sourceMap": true,
+    "removeComments": true,
+
+    /* Node */
+    "types": ["node"],
+
+    /* Imports */
+    "resolveJsonModule": true
+  },
+
+  "include": ["src", "prisma.config.ts"],
+  "exclude": ["node_modules", "dist"]
+}
