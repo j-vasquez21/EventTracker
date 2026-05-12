@@ -1,10 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { prisma } from '../lib/prisma.js';
-import dotenv from 'dotenv';
+import 'dotenv/config';
 import { JwtPayload } from '../types/auth.js';
-
-dotenv.config();
 
 const secret_key = process.env.JWT_SECRET as string;
 

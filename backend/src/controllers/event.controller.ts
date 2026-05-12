@@ -33,7 +33,7 @@ export const eventController = {
     async getUserEvents(req: Request, res: Response) {
         try {
             const userId = req.user.userId;
-            const events = prisma.event.findMany({
+            const events = await prisma.event.findMany({
                 where: { userId },
                 orderBy: { date: 'asc' }
             });
